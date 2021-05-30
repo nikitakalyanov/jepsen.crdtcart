@@ -4,8 +4,8 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
 
-1. Install leineine
-2. Set up jepsen nodes. For example use LXC and instructions from Jepsen repo.
+1. Install Leiningen
+2. Set up jepsen nodes. For example use LXC and instructions from Jepsen repo (https://github.com/jepsen-io/jepsen/blob/main/doc/lxc.md).
 
 ## License
 

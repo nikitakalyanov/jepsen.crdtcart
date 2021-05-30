@@ -1,3 +1,7 @@
+Some links:
+https://github.com/jepsen-io/jepsen/blob/main/doc/lxc.md
+https://ubuntu.com/server/docs/containers-lxc
+(but this is for server ubuntu, not desktop)
 Setting up LXC nodes on Ubuntu is mostly from these instructions, but:
 1. Some problems with DNS, manual /etc/hosts intervention was needed
 2. LXC expects older ssh private key format, convert existing keys if needed
