@@ -1,11 +1,11 @@
 # jepsen.crdtcart
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to test a CRDT implementation of shopping cart with Jepsen framework.
 
 ## Usage
 
 1. Install Leiningen
-2. Set up jepsen nodes. For example use LXC and instructions from Jepsen repo (https://github.com/jepsen-io/jepsen/blob/main/doc/lxc.md).
+2. Set up jepsen nodes. For example use LXC and instructions from Jepsen repo (https://github.com/jepsen-io/jepsen/blob/main/doc/lxc.md). Ubuntu-specific instructions (LXC-based nodes on Debian Buster) are in lxc-notes.md file.
 3. Install Gnuplot
 ```
 apt install gnuplot
