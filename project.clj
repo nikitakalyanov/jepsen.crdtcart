@@ -6,5 +6,6 @@
   :main jepsen.crdtcart
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [jepsen "0.2.1-SNAPSHOT"]
-                 [clj-tcp "1.0.1"]]
+                 [cheshire "5.10.0"]
+                 [knossos "0.3.7"]]
   :repl-options {:init-ns jepsen.crdtcart})

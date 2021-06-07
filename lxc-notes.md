@@ -9,3 +9,23 @@ Setting up LXC nodes on Ubuntu is mostly from these instructions, but:
 4. Most LXC management requires root
 5. There were no preinstalled openssh-server in LXC container, installation is needed
 6. Managing same configuration in multiple nodes could quickly get hard.
+
+
+sudo cp -r ~/crdt-cart/ /var/lib/lxc/n1/rootfs/crdt-cart/
+apt install -y python3
+apt install -y python3-pip
+apt install -y libpq-dev
+apt install -y iptables  # needed for nemesis
+pip3 install psycopg2
+cd crdt-cart/
+pip3 install -r requirements.txt
+use docker container ip address to connect to postgesql (docker inspect)
+# somehow this is not working
+sudo lxc-attach -n n1 -- bash -c 'python3 crdt-cart/http_server.py &'
+# so enter the container and run manually
+python3 crdt-cart/http_server.py &
+
+
+# ssh to node like this
+sudo ssh -i /home/nkalyanov/jepsen-repo/jepsen/docker/test-key.pem root@n1
+# client should listen 0.0.0.0 so that jepsen can connect

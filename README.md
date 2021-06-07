@@ -6,7 +6,14 @@ A Clojure library designed to ... well, that part is up to you.
 
 1. Install Leiningen
 2. Set up jepsen nodes. For example use LXC and instructions from Jepsen repo (https://github.com/jepsen-io/jepsen/blob/main/doc/lxc.md).
-
+3. Install Gnuplot
+```
+apt install gnuplot
+```
+4. Run like this (from this directory):
+```
+lein run test -n n1 --ssh-private-key ~/jepsen-repo/jepsen/docker/test-key.pem
+```
 ## License
 
 Copyright © 2021 FIXME
