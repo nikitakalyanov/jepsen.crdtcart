@@ -29,3 +29,34 @@ python3 crdt-cart/http_server.py &
 # ssh to node like this
 sudo ssh -i /home/nkalyanov/jepsen-repo/jepsen/docker/test-key.pem root@n1
 # client should listen 0.0.0.0 so that jepsen can connect
+
+
+# bash loop
+for i in {1..5}; do
+  sudo lxc-start -d -n n$i
+done
+
+for i in {1..5}; do
+  sudo cp -r ~/crdt-cart/ /var/lib/lxc/n${i}/rootfs/crdt-cart/
+done
+
+for i in {1..5}; do
+  sudo lxc-attach -n n${i} -- apt install -y openssh-server python3 python3-pip libpq-dev iptables sudo
+  sudo lxc-attach -n n${i} -- pip3 install psycopg2
+  sudo lxc-attach -n n${i} -- bash -c 'cd /crdt-cart/; pip3 install -r requirements.txt';
+done
+
+# add this to your /etc/hosts
+10.0.3.80 n1
+10.0.3.72 n2
+10.0.3.160 n3
+10.0.3.217 n4
+10.0.3.4 n5
+# you can take container IPs from sudo lxc-info n1, sudo lxc-info n2, etc.
+
+# allow root login with password root
+for i in {1..5}; do
+  sudo lxc-attach -n n${i} -- bash -c 'echo -e "root\nroot\n" | passwd root';
+  sudo lxc-attach -n n${i} -- sed -i 's,^#\?PermitRootLogin .*,PermitRootLogin yes,g' /etc/ssh/sshd_config;
+  sudo lxc-attach -n n${i} -- systemctl restart sshd;
+done

@@ -177,21 +177,29 @@
                      :timeline (timeline/html)})
           :generator (gen/phases
                        (->> (gen/mix [r add rm])
-                            (gen/stagger 1)
+                            (gen/stagger (/ (:rate opts)))
                             (gen/nemesis
                               (cycle [(gen/sleep 5)
                                {:type :info, :f :start}
                                (gen/sleep 5)
                                {:type :info, :f :stop}]))
-                            (gen/time-limit 15))
+                            (gen/time-limit (:time-limit opts)))
                         (gen/log "stopping network problems")
                         (gen/nemesis (gen/once {:type :info, :f :stop}))
                         (gen/log "Waiting for syncronisation")
-                        (gen/sleep 1)
+                        (gen/sleep 65)
                         (gen/clients (gen/once {:type :invoke, :f :read, :value nil})))}))
+
+(def cli-opts
+  "Additional command line options."
+    [["-r" "--rate HZ" "Approximate number of requests per second, per thread."
+    :default  10
+    :parse-fn read-string
+    :validate [#(and (number? %) (pos? %)) "Must be a positive number"]]])
 
 (defn -main
   "Handles command line arguments."
   [& args]
-  (cli/run! (cli/single-test-cmd {:test-fn crdtcart-test})
+  (cli/run! (cli/single-test-cmd {:test-fn crdtcart-test
+                                  :opt-spec cli-opts})
             args))
