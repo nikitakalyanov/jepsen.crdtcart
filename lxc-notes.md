@@ -11,27 +11,8 @@ Setting up LXC nodes on Ubuntu is mostly from these instructions, but:
 6. Managing same configuration in multiple nodes could quickly get hard.
 
 
-sudo cp -r ~/crdt-cart/ /var/lib/lxc/n1/rootfs/crdt-cart/
-apt install -y python3
-apt install -y python3-pip
-apt install -y libpq-dev
-apt install -y iptables  # needed for nemesis
-pip3 install psycopg2
-cd crdt-cart/
-pip3 install -r requirements.txt
-use docker container ip address to connect to postgesql (docker inspect)
-# somehow this is not working
-sudo lxc-attach -n n1 -- bash -c 'python3 crdt-cart/http_server.py &'
-# so enter the container and run manually
-python3 crdt-cart/http_server.py &
-
-
-# ssh to node like this
-sudo ssh -i /home/nkalyanov/jepsen-repo/jepsen/docker/test-key.pem root@n1
-# client should listen 0.0.0.0 so that jepsen can connect
-
-
-# bash loop
+# LXC Node setup
+```bash
 for i in {1..5}; do
   sudo lxc-start -d -n n$i
 done
@@ -45,18 +26,38 @@ for i in {1..5}; do
   sudo lxc-attach -n n${i} -- pip3 install psycopg2
   sudo lxc-attach -n n${i} -- bash -c 'cd /crdt-cart/; pip3 install -r requirements.txt';
 done
+```
 
-# add this to your /etc/hosts
+Add this to your /etc/hosts
+```
 10.0.3.80 n1
 10.0.3.72 n2
 10.0.3.160 n3
 10.0.3.217 n4
 10.0.3.4 n5
-# you can take container IPs from sudo lxc-info n1, sudo lxc-info n2, etc.
+```
+you can take container IPs from sudo lxc-info n1, sudo lxc-info n2, etc.
 
+```bash
 # allow root login with password root
 for i in {1..5}; do
   sudo lxc-attach -n n${i} -- bash -c 'echo -e "root\nroot\n" | passwd root';
   sudo lxc-attach -n n${i} -- sed -i 's,^#\?PermitRootLogin .*,PermitRootLogin yes,g' /etc/ssh/sshd_config;
   sudo lxc-attach -n n${i} -- systemctl restart sshd;
 done
+
+# ssh to node like this
+sudo ssh -i /home/nkalyanov/jepsen-repo/jepsen/docker/test-key.pem root@n1
+# client should listen 0.0.0.0 so that jepsen can connect
+```
+
+enter each of the containers and run
+```bash
+DB_HOST=172.17.0.2 python3 crdt-cart/http_server.py
+```
+use docker container ip address to connect to postgesql (docker inspect)
+
+```bash
+SERVER_HOST=172.17.0.3 python3 crdt-cart/tcp_serving_client.py
+```
+use load balancer docker container ip address

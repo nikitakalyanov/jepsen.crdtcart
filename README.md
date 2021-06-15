@@ -1,6 +1,6 @@
 # jepsen.crdtcart
 
-A Clojure library designed to test a CRDT implementation of shopping cart with Jepsen framework.
+A Clojure library designed to test a [CRDT implementation of shopping cart](https://github.com/nikitakalyanov/crdt-cart) with Jepsen framework.
 
 ## Usage
 
