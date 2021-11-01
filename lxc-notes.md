@@ -17,6 +17,8 @@ for i in {1..5}; do
   sudo lxc-start -d -n n$i
 done
 
+# cp will not overwrite files, if you already have something in dest dir
+# don't forget to rm it first
 for i in {1..5}; do
   sudo cp -r ~/crdt-cart/ /var/lib/lxc/n${i}/rootfs/crdt-cart/
 done
